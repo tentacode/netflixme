@@ -1,0 +1,26 @@
+[Unit]
+Description=Jellyfin Media Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ jellyfin.user }}
+Group={{ jellyfin.group }}
+ExecStart=/usr/bin/jellyfin \
+    --datadir {{ jellyfin.data_dir }} \
+    --cachedir {{ jellyfin.cache_dir }} \
+    --configdir {{ jellyfin.config_dir }} \
+    --logdir {{ jellyfin.log_dir }}
+Restart=on-failure
+TimeoutSec=15
+SuccessExitStatus=0 143
+
+# Security settings
+#PrivateTmp=true
+#ProtectSystem=full
+#ProtectHome=true
+#NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

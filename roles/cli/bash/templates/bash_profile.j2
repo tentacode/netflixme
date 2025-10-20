@@ -1,0 +1,38 @@
+BLACK="\[\033[0;30m\]"      # black
+RED="\[\033[0;31m\]"        # red
+GREEN="\[\033[0;32m\]"      # green
+YELLOW="\[\033[0;33m\]"     # yellow
+BLUE="\[\033[0;34m\]"       # blue
+MAGENTA="\[\033[0;35m\]"    # magenta
+CYAN="\[\033[0;36m\]"       # cyan
+LIGHT_GREY="\[\033[0;37m\]" # light grey
+DARK_GREY="\[\033[1;30m\]"  # dark grey
+WHITE="\[\033[1;37m\]"      # white
+COLOR_OFF="\[\033[0m\]"     # off
+
+export CLICOLOR="1"
+export PS1="$CYAN{{ user.prompt }}$RED\$(prompt_last_retval_if_failed)$COLOR_OFF$MAGENTA\$(prompt_path)$YELLOW\$COLOR_OFF\$ "
+
+function prompt_last_retval_if_failed {
+    local RET=$?
+    if [ $RET -ne 0 ]; then
+        echo "($RET) "
+    fi
+}
+
+function prompt_path {
+    if [ $HOME = `pwd` ]; then
+        echo '~'
+    else
+        basename `pwd`
+    fi
+}
+
+#!/bin/bash
+alias histogrep='history | grep'
+
+# Custom binaries path
+PATH=$PATH:$HOME/bin
+
+# Path for pip binaries
+PATH=$PATH:$HOME/.local/bin

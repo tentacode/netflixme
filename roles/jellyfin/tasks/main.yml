@@ -1,0 +1,73 @@
+---
+- name: Install required dependencies
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
+      - curl
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Add Jellyfin GPG key
+  apt_key:
+    url: https://repo.jellyfin.org/ubuntu/jellyfin_team.gpg.key
+    state: present
+  become: yes
+
+- name: Add Jellyfin repository
+  apt_repository:
+    repo: "deb [arch={{ jellyfin.arch }}] https://repo.jellyfin.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
+    state: present
+    filename: jellyfin
+  become: yes
+
+- name: Install Jellyfin server
+  apt:
+    name:
+      - jellyfin-server
+      - jellyfin-web
+      - jellyfin-ffmpeg6
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Create Jellyfin directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ jellyfin.user }}"
+    group: "{{ jellyfin.group }}"
+  loop:
+    - "{{ jellyfin.data_dir }}"
+    - "{{ jellyfin.cache_dir }}"
+    - "{{ jellyfin.config_dir }}"
+    - "{{ jellyfin.log_dir }}"
+  become: yes
+
+- name: Configure Jellyfin service
+  template:
+    src: jellyfin.service.j2
+    dest: /etc/systemd/system/jellyfin.service
+    mode: '0644'
+  notify: restart jellyfin
+  become: yes
+
+- name: Enable and start Jellyfin service
+  systemd:
+    name: jellyfin
+    enabled: yes
+    state: started
+    daemon_reload: yes
+  become: yes
+
+- name: Configure nginx for Jellyfin
+  template:
+    src: nginx-jellyfin.conf.j2
+    dest: /etc/nginx/sites-enabled/jellyfin
+    mode: '0644'
+  when: jellyfin.use_nginx | default(true)
+  notify: restart nginx
+  become: yes

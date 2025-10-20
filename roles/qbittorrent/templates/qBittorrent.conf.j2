@@ -1,0 +1,28 @@
+# roles/qbittorrent/templates/qBittorrent.conf.j2
+
+[Preferences]
+# Downloads
+Downloads\SavePath={{ qbittorrent.download_dir }}/
+Downloads\TempPath={{ qbittorrent.download_dir }}/temp/
+
+# Connection
+Connection\PortRangeMin={{ qbittorrent.port }}
+Connection\UPnP=false
+
+# BitTorrent
+Bittorrent\DHT=true
+Bittorrent\PeX=true
+Bittorrent\LSD=true
+Bittorrent\Encryption=1
+
+# Web UI
+WebUI\Address=*
+WebUI\Port={{ qbittorrent.webui_port }}
+WebUI\Username={{ qbittorrent.webui_username }}
+{% if qbittorrent.webui_password_pbkdf2 %}
+WebUI\Password_PBKDF2={{ qbittorrent.webui_password_pbkdf2 }}
+{% endif %}
+WebUI\CSRFProtection=true
+WebUI\ClickjackingProtection=true
+WebUI\LocalHostAuth=true
+WebUI\AlternativeUIEnabled=false

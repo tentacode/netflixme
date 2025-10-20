@@ -1,0 +1,20 @@
+---
+- hosts: all
+
+  # post_tasks:
+  #   - shell: say -v 'good news' server provisioning complete
+  #     delegate_to: localhost
+  #     args:
+  #       executable: /bin/bash
+
+  roles:
+    - ubuntu
+
+    - cli/bash
+
+    - web-server/nginx
+
+    - jellyfin
+    - qbittorrent
+
+    - web-server/letsencrypt

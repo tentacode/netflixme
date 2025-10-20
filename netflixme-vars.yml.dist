@@ -1,0 +1,48 @@
+server:
+  timezone: Europe/Paris
+
+user:
+  name: gabriel
+  group: gabriel
+  home_directory: /home/gabriel
+  workspace_directory: /home/gabriel
+  prompt: '{netflixme}'
+
+letsencrypt:
+  domain: CHANGE_ME
+  email: CHANGE_ME
+
+jellyfin:
+  data_dir: /var/lib/jellyfin
+  cache_dir: /var/cache/jellyfin
+  config_dir: /etc/jellyfin
+  log_dir: /var/log/jellyfin
+
+  user: jellyfin
+  group: jellyfin
+
+  port: 8096
+  bind_address: "127.0.0.1"
+
+  # Nginx settings
+  use_nginx: true
+  server_name: "jellyfin.example.com"
+  remove_default_site: false
+
+  # Architecture mapping
+  arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
+
+
+qbittorrent:
+  user: qbittorrent
+  group: qbittorrent
+
+  config_dir: /var/lib/qbittorrent
+  download_dir: /srv/media
+
+  webui_port: 8080
+  webui_username: admin
+  webui_password_pbkdf2: "CHANGE_ME"
+
+  port: 6881
+  server_name: "CHANGE_ME"
